@@ -12,7 +12,7 @@ type Message struct {
 }
 
 type LoginMsg struct {
-	UserId   int    `json:"userId"`
+	UserId   string    `json:"userId"`
 	UserPwd  string `json:"userPwd"`
 	UserName string `json:"userName"`
 }
@@ -20,7 +20,7 @@ type LoginMsg struct {
 type LoginResultMsg struct {
 	Code  int    `json:"code"`
 	Error string `json:"error"`
-	// Data string `json:"data"`
+	Data []string `json:"data"`
 }
 
 type RegisterMsg struct {

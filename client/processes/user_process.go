@@ -14,7 +14,7 @@ type UserProcess struct {
 	//don't needs at this time
 }
 
-func (this *UserProcess) Login(userName string, userPwd string) (err error) {
+func (this *UserProcess) Login(userId string, userPwd string) (err error) {
 	// user login task
 	conn, err := net.Dial("tcp", "192.168.1.106:8888")
 	if err != nil {
@@ -26,7 +26,7 @@ func (this *UserProcess) Login(userName string, userPwd string) (err error) {
 	var msg message.Message
 	msg.Type = message.LoginMsgType
 	var loginMsg message.LoginMsg
-	loginMsg.UserName = userName
+	loginMsg.UserId = userId
 	loginMsg.UserPwd = userPwd
 	// 序列化要传输的数据
 	data, err := json.Marshal(loginMsg)
@@ -75,6 +75,10 @@ func (this *UserProcess) Login(userName string, userPwd string) (err error) {
 	if loginResMsg.Code == 200 {
 		fmt.Println("client received the server response, login successful")
 
+		// show online users
+		for _, v := range(loginResMsg.Data) {
+			fmt.Println("online user:", v)
+		}
 		// start a new process connect with the server
 		// sP := &Server{}
 		go processServerMsg(conn)

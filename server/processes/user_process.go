@@ -12,6 +12,7 @@ import (
 
 type UserProcessor struct {
 	Conn net.Conn
+	UserId string
 
 }
 func (this *UserProcessor) ServerProcessLogin(msg *message.Message) (err error) {
@@ -24,7 +25,7 @@ func (this *UserProcessor) ServerProcessLogin(msg *message.Message) (err error) 
 	resMsg.Type = message.LoginResultMsgType
 	var loginResMsg message.LoginResultMsg
 
-	user, err := model.MyUserDBO.Login(loginMsg.UserName, loginMsg.UserPwd)
+	user, err := model.MyUserDBO.Login(loginMsg.UserId, loginMsg.UserPwd)
 
 	if err != nil {
 		if err == model.ERROR_USER_NOT_EXIST {
@@ -40,6 +41,13 @@ func (this *UserProcessor) ServerProcessLogin(msg *message.Message) (err error) 
 	} else {
 		loginResMsg.Code = 200
 		fmt.Println("登录成功", user)
+		// add the user_processor to online_user map
+		this.UserId = loginMsg.UserId
+		ServerUserManger.addOnlineUser(this)
+		// ServerUserManger.onlineUsers 加入到返回结果的Data中
+		for id, _ := range ServerUserManger.onlineUsers {
+			loginResMsg.Data = append(loginResMsg.Data, id)
+		}
 	}
 	data, err := json.Marshal(loginResMsg)
 	if err != nil {
