@@ -8,6 +8,7 @@ import (
 
 var userName string
 var userPwd string
+var userId string
 
 func main() {
 	
@@ -26,14 +27,22 @@ func main() {
 			case 1:
 				fmt.Println("------------login chat room------------")
 				fmt.Println("------------please input username")
-				fmt.Scanf("%s\n", &userName)
+				fmt.Scanf("%s\n", &userId)
 				fmt.Println("------------please input password")
 				fmt.Scanf("%s\n", &userPwd)
 				userProcess := &processes.UserProcess{}
-				userProcess.Login(userName, userPwd)
+				userProcess.Login(userId, userPwd)
 				// loop = false
 			case 2:
 				fmt.Println("------------register new user------------")
+				fmt.Println("Please input userId")
+				fmt.Scanf("%s\n", &userId)
+				fmt.Println("Please input userName")
+				fmt.Scanf("%s\n", &userName)
+				fmt.Println("Please input userPwd")
+				fmt.Scanf("%s\n", &userPwd)
+				userProcess := &processes.UserProcess{}
+				userProcess.Register(userId,userName, userPwd)
 				// loop = false
 			case 3:
 				fmt.Println("l------------ogout the system------------")
@@ -42,15 +51,4 @@ func main() {
 				fmt.Println("wrong input, Please re-input number(1-3)")
 		}
 	}
-
-	// if 1== key {
-	// 	fmt.Println("------------please input username")
-	// 	fmt.Scanf("%s\n", &userName)
-	// 	fmt.Println("------------please input password")
-	// 	fmt.Scanf("%s\n", &userPwd)
-	// 	userProcess := &processes.UserProcess{}
-	// 	userProcess.Login(userName, userPwd)
-	// } else if 2 == key {
-	// 	fmt.Println("------------register task")
-	// }
 }

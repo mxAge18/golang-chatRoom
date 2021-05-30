@@ -2,7 +2,9 @@ package main
 
 import (
 	"fmt"
+	"go_code/chatPro/server/model"
 	"net"
+	"time"
 )
 func process(conn net.Conn) {
 	defer conn.Close()
@@ -12,7 +14,12 @@ func process(conn net.Conn) {
 	subProcessor.SubProcessor()
 
 }
+func initUserDBO() {
+	model.MyUserDBO = model.NewUserDBO(pool)
+}
 func main() {
+	initPool("0.0.0.0:6379", 16, 0, 300 * time.Second) // 服务器启动初始化连接池
+	initUserDBO()
 	fmt.Println("start listen on the port 8888")
 	listen, err := net.Listen("tcp", "0.0.0.0:8888")
 	defer listen.Close()

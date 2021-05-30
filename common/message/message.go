@@ -1,9 +1,9 @@
 package message
 
 const (
-	LoginMsgType = "LoginMsg"
+	LoginMsgType       = "LoginMsg"
 	LoginResultMsgType = "LoginResultMsg"
-	RegisterMsgType = "RegisterMsg"
+	RegisterMsgType    = "RegisterMsg"
 )
 
 type Message struct {
@@ -12,12 +12,23 @@ type Message struct {
 }
 
 type LoginMsg struct {
-	UserId int `json:"userId"`
-	UserPwd string `json:"userPwd"`
+	UserId   int    `json:"userId"`
+	UserPwd  string `json:"userPwd"`
 	UserName string `json:"userName"`
 }
 
 type LoginResultMsg struct {
-	Code int `json:"code"`
+	Code  int    `json:"code"`
 	Error string `json:"error"`
+	// Data string `json:"data"`
+}
+
+type RegisterMsg struct {
+	User User `json:"user"`
+}
+
+type RegisterResultMsg struct {
+	Code  int    `json:"code"` // 400标识已占用  200 标识ok // 403标识User未校验通过
+	Error string `json:"error"`
+	// Data string `json:"data"`
 }

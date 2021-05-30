@@ -20,6 +20,10 @@ func (this *Processor) serverProcessMsg(msg *message.Message) (err error) {
 			err = userPro.ServerProcessLogin(msg)
 		case message.RegisterMsgType:
 			//deal with the register
+			userPro := &processes.UserProcessor{
+				Conn : this.Conn,
+			}
+			err = userPro.ServerProcessRegister(msg)
 		default:
 			fmt.Println("message type is not right")
 

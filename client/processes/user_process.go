@@ -7,6 +7,7 @@ import (
 	"go_code/chatPro/client/utils"
 	"go_code/chatPro/common/message"
 	"net"
+	"os"
 )
 
 type UserProcess struct {
@@ -84,5 +85,59 @@ func (this *UserProcess) Login(userName string, userPwd string) (err error) {
 	} else {
 		fmt.Println(loginResMsg.Error)
 	}
+	return
+}
+
+func (this *UserProcess) Register(userId, userName, UserPwd string) (err error) {
+	conn, err := net.Dial("tcp", "192.168.1.106:8888")
+	if err != nil {
+		fmt.Println("net connection error", err)
+		return
+	}
+	defer conn.Close()
+
+	var msg message.Message
+	msg.Type = message.RegisterMsgType
+	var registerMsg message.RegisterMsg
+	registerMsg.User.UserId = userId
+	registerMsg.User.UserPwd = UserPwd
+	registerMsg.User.UserName = userName
+	data, err := json.Marshal(registerMsg)
+	if err != nil {
+		fmt.Println("data json marshal error", err)
+		return
+	}
+	msg.Data = string(data)
+	data, err = json.Marshal(msg)
+	if err != nil {
+		fmt.Println("msg json marshal error", err)
+		return
+	}
+
+	tr := &utils.Transfer{
+		Conn: conn,
+	}
+	err = tr.WritePkg(data)
+	if err != nil {
+		fmt.Println("tr.WritePkg(data) error", err)
+		return
+	}
+	msg, err = tr.ReadPkg()
+	if nil != err {
+		fmt.Println("register readPkg(conn) wrong, err=", err)
+		return
+	}
+	var registerResultMsg message.RegisterResultMsg
+	err = json.Unmarshal([]byte(msg.Data), &registerResultMsg)
+	if nil != err {
+		fmt.Println(" json.Unmarshal([]byte(msg.Data), &RegisterResultMsg) wrong, err=", err)
+		return
+	}
+	if registerResultMsg.Code == 200 {
+		fmt.Println("register successful")
+	} else {
+		fmt.Println(registerResultMsg.Error)
+	}
+	os.Exit(0)
 	return
 }
