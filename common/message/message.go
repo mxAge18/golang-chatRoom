@@ -1,9 +1,17 @@
 package message
 
 const (
-	LoginMsgType       = "LoginMsg"
-	LoginResultMsgType = "LoginResultMsg"
-	RegisterMsgType    = "RegisterMsg"
+	LoginMsgType            = "LoginMsg"
+	LoginMesType            = "LoginMes"
+	LoginResultMsgType      = "LoginResultMsg"
+	RegisterMsgType         = "RegisterMsg"
+	NotifyUserStatusMsgType = "NotifyUserStatusMsg"
+)
+
+const (
+	UserOnline     = 1
+	UserOffline    = 2
+	UserBusyStatus = 3
 )
 
 type Message struct {
@@ -12,15 +20,15 @@ type Message struct {
 }
 
 type LoginMsg struct {
-	UserId   string    `json:"userId"`
+	UserId   string `json:"userId"`
 	UserPwd  string `json:"userPwd"`
 	UserName string `json:"userName"`
 }
 
 type LoginResultMsg struct {
-	Code  int    `json:"code"`
-	Error string `json:"error"`
-	Data []string `json:"data"`
+	Code  int      `json:"code"`
+	Error string   `json:"error"`
+	Data  []string `json:"data"`
 }
 
 type RegisterMsg struct {
@@ -31,4 +39,11 @@ type RegisterResultMsg struct {
 	Code  int    `json:"code"` // 400标识已占用  200 标识ok // 403标识User未校验通过
 	Error string `json:"error"`
 	// Data string `json:"data"`
+}
+
+// user online information of status
+type NotifyUserStatusMsg struct {
+	UserId     string `json:"userId"`
+	UserName   string `json:"userName"`
+	UserStatus int    `json:"userStatus"`
 }

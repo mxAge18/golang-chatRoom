@@ -74,17 +74,28 @@ func (this *UserProcess) Login(userId string, userPwd string) (err error) {
 	}
 	if loginResMsg.Code == 200 {
 		fmt.Println("client received the server response, login successful")
-
+		// init online users status
+		
 		// show online users
-		for _, v := range(loginResMsg.Data) {
+		for i, v := range(loginResMsg.Data) {
 			fmt.Println("online user:", v)
+			fmt.Println("online user index:", i)
+			user := &message.User{
+				UserId: v,
+				UserName: v,
+				UserStatus: message.UserOnline,
+			}
+			ClientUserMangerObj.AddOnlineUser(user)
 		}
+		ClientUserMangerObj.OutputOnlineUsers()
 		// start a new process connect with the server
-		// sP := &Server{}
-		go processServerMsg(conn)
+		sP := &Server{
+			Conn: conn,
+		}
+		go sP.ProcessServerMsg()
 		// start show menu
 		for {
-			ShowMenu()
+			sP.ShowMenu()
 		}
 	} else {
 		fmt.Println(loginResMsg.Error)

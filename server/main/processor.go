@@ -25,7 +25,7 @@ func (this *Processor) serverProcessMsg(msg *message.Message) (err error) {
 			}
 			err = userPro.ServerProcessRegister(msg)
 		default:
-			fmt.Println("message type is not right")
+			fmt.Println("message type is not right", msg.Type)
 
 	}
 	return
@@ -48,7 +48,10 @@ func (this *Processor) SubProcessor() (err error) {
 		fmt.Println("msg is", msg)
 
 		err = this.serverProcessMsg(&msg)
-		return err
+		if err != nil {
+			return err
+		}
+		// important:原来直接写return err,客户端协程监听服务端发送的消息就收到EOF的错误。改成 if err != nil :return err
 	}
 }
 

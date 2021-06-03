@@ -15,6 +15,50 @@ type UserProcessor struct {
 	UserId string
 
 }
+// send all online user online info
+func (this *UserProcessor) NotifyOtherOnlineUser(UserId string) (err error) {
+
+	
+	for id, up := range(ServerUserManger.onlineUsers) {
+		if id == UserId {
+			continue
+		}
+		up.NotifyMeOnlineUser(UserId)
+
+	}
+	return
+
+}
+
+func (this *UserProcessor) NotifyMeOnlineUser(userId string) {
+	var resMsg message.Message
+	resMsg.Type = message.NotifyUserStatusMsgType
+	var notifyMsg message.NotifyUserStatusMsg
+	notifyMsg.UserId = userId
+	notifyMsg.UserStatus = message.UserOnline
+	notifyMsg.UserStatus = message.UserOnline
+	
+	data, err := json.Marshal(notifyMsg)
+	if err != nil {
+		fmt.Println("Json Marshal error", err)
+		return
+	}
+	resMsg.Data = string(data)
+	data, err = json.Marshal(resMsg)
+	if err != nil {
+		fmt.Println("resMsg Json Marshal error", err)
+		return
+	}
+	tr := &utils.Transfer{
+		Conn: this.Conn,
+	}
+	err = tr.WritePkg(data)
+	if err != nil {
+		fmt.Println("UserId, writePkg(conn, data) error",userId, err)
+		return
+	}
+
+}
 func (this *UserProcessor) ServerProcessLogin(msg *message.Message) (err error) {
 	var loginMsg message.LoginMsg
 	err = json.Unmarshal([]byte(msg.Data), &loginMsg)
@@ -43,7 +87,10 @@ func (this *UserProcessor) ServerProcessLogin(msg *message.Message) (err error) 
 		fmt.Println("登录成功", user)
 		// add the user_processor to online_user map
 		this.UserId = loginMsg.UserId
+		fmt.Println("serverUserManger",ServerUserManger)
 		ServerUserManger.addOnlineUser(this)
+		// notify
+		this.NotifyOtherOnlineUser(this.UserId)
 		// ServerUserManger.onlineUsers 加入到返回结果的Data中
 		for id, _ := range ServerUserManger.onlineUsers {
 			loginResMsg.Data = append(loginResMsg.Data, id)
