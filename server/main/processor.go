@@ -24,6 +24,9 @@ func (this *Processor) serverProcessMsg(msg *message.Message) (err error) {
 				Conn : this.Conn,
 			}
 			err = userPro.ServerProcessRegister(msg)
+		case message.SmsMsgType:
+			smsPro := &processes.SmsServerProcess{}
+			smsPro.SendGroupMsg(msg)
 		default:
 			fmt.Println("message type is not right", msg.Type)
 

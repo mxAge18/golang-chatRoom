@@ -22,9 +22,13 @@ func(this *Server) ShowMenu() {
 	fmt.Scanf("%d\n", &key)
 	switch key {
 	case 1:
-		fmt.Println("show online list")
+		ClientUserMangerObj.OutputOnlineUsers()
 	case 2:
-		fmt.Println("send message")
+		sp:= SmsProcess{}
+		var msg string
+		fmt.Println("please input message")
+		fmt.Scanln(&msg)
+		sp.SendGroup(msg)
 	case 3:
 		fmt.Println("message list")
 	case 4:
@@ -41,7 +45,6 @@ func(this *Server) ProcessServerMsg() {
 		Conn: this.Conn,
 	}
 	for {
-		fmt.Println("client is reading msg from server")
 		msg, err := tf.ReadPkg()
 		if err != nil {
 			fmt.Println("tf.ReadPkg wrong,2 error=", err)
@@ -59,8 +62,11 @@ func(this *Server) ProcessServerMsg() {
 			}
 			ClientUserMangerObj.AddOnlineUser(user)
 			ClientUserMangerObj.OutputOnlineUsers()
+		case message.GroupReturnMsgType:
+			sp := &SmsProcess{}
+			sp.ReadGroupMsg(msg)
 		default:
-			fmt.Printf("mes无法解析=%v\n", msg)
+			fmt.Printf("msg无法解析=%v\n", msg)
 		}
 
 	}

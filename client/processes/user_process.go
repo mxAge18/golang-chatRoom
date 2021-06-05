@@ -74,6 +74,10 @@ func (this *UserProcess) Login(userId string, userPwd string) (err error) {
 	}
 	if loginResMsg.Code == 200 {
 		fmt.Println("client received the server response, login successful")
+		// init current User
+		CurrentUserObj.Conn = conn
+		CurrentUserObj.UserId = userId
+		CurrentUserObj.UserStatus = message.UserOnline
 		// init online users status
 		
 		// show online users

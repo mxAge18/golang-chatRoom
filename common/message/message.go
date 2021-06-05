@@ -6,6 +6,8 @@ const (
 	LoginResultMsgType      = "LoginResultMsg"
 	RegisterMsgType         = "RegisterMsg"
 	NotifyUserStatusMsgType = "NotifyUserStatusMsg"
+	SmsMsgType              = "SmsMsg"
+	GroupReturnMsgType      = "GroupReturnMsg"
 )
 
 const (
@@ -46,4 +48,16 @@ type NotifyUserStatusMsg struct {
 	UserId     string `json:"userId"`
 	UserName   string `json:"userName"`
 	UserStatus int    `json:"userStatus"`
+}
+
+// send message struct
+type SmsMsg struct {
+	User User
+	Body string `json:"body"`
+}
+
+type GroupReturnMsg struct {
+	Code  int    `json:"code"` // 400标识已占用  200 标识ok // 403标识User未校验通过
+	Error string `json:"error"`
+	Data string `json:"data"`
 }

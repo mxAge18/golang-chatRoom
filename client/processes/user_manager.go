@@ -2,11 +2,13 @@ package processes
 
 import (
 	"fmt"
+	"go_code/chatPro/client/model"
 	"go_code/chatPro/common/message"
 )
 
 var (
 	ClientUserMangerObj *ClientUserManger
+	CurrentUserObj *model.CurrentUser //全局变量，登录成功后初始化该变量
 )
 
 type ClientUserManger struct {
@@ -17,6 +19,7 @@ func init() {
 	ClientUserMangerObj = &ClientUserManger{
 		onlineUsers: make(map[string]*message.User, 10),
 	}
+	CurrentUserObj = &model.CurrentUser{}
 }
 
 func (this *ClientUserManger) OutputOnlineUsers() {
