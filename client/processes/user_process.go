@@ -160,3 +160,4 @@ func (this *UserProcess) Register(userId, userName, UserPwd string) (err error) 
 	os.Exit(0)
 	return
 }
+

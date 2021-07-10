@@ -16,8 +16,9 @@ func(this *Server) ShowMenu() {
 	fmt.Println("------------1 user online list--------------")
 	fmt.Println("------------2 send message------------------")
 	fmt.Println("------------3 message list------------------")
-	fmt.Println("------------4 exit the system---------------")
-	fmt.Println("------------please choose(1-4)--------------")
+	fmt.Println("------------4 send message to someone-------")
+	fmt.Println("------------5 exit the system---------------")
+	fmt.Println("------------please choose(1-5)--------------")
 	var key int
 	fmt.Scanf("%d\n", &key)
 	switch key {
@@ -32,10 +33,20 @@ func(this *Server) ShowMenu() {
 	case 3:
 		fmt.Println("message list")
 	case 4:
+		ClientUserMangerObj.OutputOnlineUsers()
+		fmt.Println("please type the userId of the person you want to send message")
+		var userId string
+		fmt.Scanln(&userId)
+		var msg string
+		fmt.Println("please input message")
+		fmt.Scanln(&msg)
+		sp:= SmsProcess{}
+		sp.SendSingleMsg(msg, userId)
+	case 5:
 		fmt.Println("exit the system")
 		os.Exit(0)
 	default:
-		fmt.Println("scanf number 1 - 4")
+		fmt.Println("scanf number 1 - 5")
 	}
 }
 

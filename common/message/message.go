@@ -66,7 +66,7 @@ type GroupReturnMsg struct {
 
 type SmsMsgSingle struct{
 	From User
-	To User
+	To string
 	Body string `json:"body"`
 }
 

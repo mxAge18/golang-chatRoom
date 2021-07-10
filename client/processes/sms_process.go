@@ -47,3 +47,33 @@ func (this *SmsProcess) ReadGroupMsg(msg message.Message) (err error) {
 	fmt.Println("发信内容：", groupMsg.Body)
 	return
 }
+
+// 发送消息给某个用户
+func (this *SmsProcess) SendSingleMsg(content string, toId string) (err error) {
+	var msg message.Message
+	msg.Type = message.SmsMsgSingleType
+	var smsMsg message.SmsMsgSingle
+	smsMsg.Body = content
+	smsMsg.From = CurrentUserObj.User
+	smsMsg.To = toId
+	data, err := json.Marshal(smsMsg)
+	if err != nil {
+		fmt.Println("smsMsg json.Marshal err", err)
+		return
+	}
+	msg.Data = string(data)
+	data, err = json.Marshal(msg)
+	if err != nil {
+		fmt.Println("msg json.Marshal err", err)
+		return
+	}
+	tr := &utils.Transfer{
+		Conn: CurrentUserObj.Conn,
+	}
+	err = tr.WritePkg(data)
+	if err != nil {
+		fmt.Println("sms WritePkg json.Marshal err", err)
+		return
+	}
+	return
+}
