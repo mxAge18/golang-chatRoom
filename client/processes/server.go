@@ -76,6 +76,10 @@ func(this *Server) ProcessServerMsg() {
 		case message.GroupReturnMsgType:
 			sp := &SmsProcess{}
 			sp.ReadGroupMsg(msg)
+
+		case message.SmsMsgSingleReturnType:
+			sp := &SmsProcess{}
+			sp.ReadSingleMsg(msg)
 		default:
 			fmt.Printf("msg无法解析=%v\n", msg)
 		}

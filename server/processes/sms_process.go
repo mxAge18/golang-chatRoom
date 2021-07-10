@@ -1,15 +1,14 @@
 package processes
 
 import (
-	"encoding/json"
-	"fmt"
 	"chatPro/common/message"
 	"chatPro/server/utils"
+	"encoding/json"
+	"fmt"
 	"net"
 )
 
-type SmsServerProcess struct{
-
+type SmsServerProcess struct {
 }
 
 func (this *SmsServerProcess) SendGroupMsg(msg *message.Message) {
@@ -26,7 +25,7 @@ func (this *SmsServerProcess) SendGroupMsg(msg *message.Message) {
 	if err != nil {
 		fmt.Println("msg json.Marshal err", err)
 	}
-	for id, up := range(ServerUserManger.onlineUsers) {
+	for id, up := range ServerUserManger.onlineUsers {
 		if id == smsMsg.User.UserId {
 			continue
 		}
@@ -44,6 +43,7 @@ func (this *SmsServerProcess) SendMsgToEachOnlineUser(data []byte, conn net.Conn
 	}
 	return
 }
+
 // 优化发送消息，发送的消息可以点对点，from userid1 to userid2 ,message
 // 如果在线直接发送 如果不在线保存到redis
 func (this *SmsServerProcess) SendMsgToSomeOne(msg *message.Message) {
@@ -60,12 +60,12 @@ func (this *SmsServerProcess) SendMsgToSomeOne(msg *message.Message) {
 	if err != nil {
 		fmt.Println("msg json.Marshal err", err)
 	}
-	val, ok := ServerUserManger.onlineUsers[smsSingleMsg.To.UserId]
+	val, ok := ServerUserManger.onlineUsers[smsSingleMsg.To]
 	if ok {
 		this.SendMsgToEachOnlineUser(data, val.Conn)
 	} else {
 		fmt.Println("用户不在线，存储到服务器")
 		// todo
-		
+
 	}
 }

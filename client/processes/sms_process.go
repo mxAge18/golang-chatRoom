@@ -77,3 +77,11 @@ func (this *SmsProcess) SendSingleMsg(content string, toId string) (err error) {
 	}
 	return
 }
+
+func (this *SmsProcess) ReadSingleMsg(msg message.Message) (err error) {
+	var singleMsg message.SmsMsg
+	json.Unmarshal([]byte(msg.Data), &singleMsg)
+	fmt.Println("私信发信人：", singleMsg.User.UserId)
+	fmt.Println("发信内容：", singleMsg.Body)
+	return
+}
