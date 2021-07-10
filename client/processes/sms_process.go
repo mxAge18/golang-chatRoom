@@ -3,8 +3,8 @@ package processes
 import (
 	"encoding/json"
 	"fmt"
-	"go_code/chatPro/common/message"
-	"go_code/chatPro/server/utils"
+	"chatPro/common/message"
+	"chatPro/server/utils"
 )
 
 type SmsProcess struct {

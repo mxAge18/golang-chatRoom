@@ -2,8 +2,8 @@ package processes
 
 import (
 	"fmt"
-	"go_code/chatPro/client/model"
-	"go_code/chatPro/common/message"
+	"chatPro/client/model"
+	"chatPro/common/message"
 )
 
 var (

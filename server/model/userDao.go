@@ -3,7 +3,7 @@ package model
 import (
 	"encoding/json"
 	"fmt"
-	"go_code/chatPro/common/message"
+	"chatPro/common/message"
 
 	"github.com/garyburd/redigo/redis"
 )

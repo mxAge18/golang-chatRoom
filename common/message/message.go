@@ -8,6 +8,8 @@ const (
 	NotifyUserStatusMsgType = "NotifyUserStatusMsg"
 	SmsMsgType              = "SmsMsg"
 	GroupReturnMsgType      = "GroupReturnMsg"
+	SmsMsgSingleType      	= "SmsMsgSingle"
+	SmsMsgSingleReturnType  = "SmsMsgSingleReturnMsg"
 )
 
 const (
@@ -57,6 +59,18 @@ type SmsMsg struct {
 }
 
 type GroupReturnMsg struct {
+	Code  int    `json:"code"` // 400标识已占用  200 标识ok // 403标识User未校验通过
+	Error string `json:"error"`
+	Data string `json:"data"`
+}
+
+type SmsMsgSingle struct{
+	From User
+	To User
+	Body string `json:"body"`
+}
+
+type SmsMsgSingleReturn struct {
 	Code  int    `json:"code"` // 400标识已占用  200 标识ok // 403标识User未校验通过
 	Error string `json:"error"`
 	Data string `json:"data"`

@@ -2,9 +2,9 @@ package main
 
 import (
 	"fmt"
-	"go_code/chatPro/common/message"
-	"go_code/chatPro/server/processes"
-	"go_code/chatPro/server/utils"
+	"chatPro/common/message"
+	"chatPro/server/processes"
+	"chatPro/server/utils"
 	"io"
 	"net"
 )
@@ -27,6 +27,10 @@ func (this *Processor) serverProcessMsg(msg *message.Message) (err error) {
 		case message.SmsMsgType:
 			smsPro := &processes.SmsServerProcess{}
 			smsPro.SendGroupMsg(msg)
+		case message.SmsMsgSingleType:
+			smsPro := &processes.SmsServerProcess{}
+			smsPro.SendMsgToSomeOne(msg)
+
 		default:
 			fmt.Println("message type is not right", msg.Type)
 

@@ -1,7 +1,7 @@
 package model
 
 import (
-	"go_code/chatPro/common/message"
+	"chatPro/common/message"
 	"net"
 )
 

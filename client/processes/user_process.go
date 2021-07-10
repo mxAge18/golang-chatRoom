@@ -4,8 +4,8 @@ import (
 	"encoding/binary"
 	"encoding/json"
 	"fmt"
-	"go_code/chatPro/client/utils"
-	"go_code/chatPro/common/message"
+	"chatPro/client/utils"
+	"chatPro/common/message"
 	"net"
 	"os"
 )
