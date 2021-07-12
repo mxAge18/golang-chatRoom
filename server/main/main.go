@@ -22,9 +22,14 @@ func initUserDBO() {
 	model.MyUserDBO = model.NewUserDBO(pool)
 }
 
+func initUserMsgDBO() {
+	model.ThisUserMsgDao = model.NewThisUserMsgDao(pool)
+}
+
 func init() {
 	initPool("0.0.0.0:6379", 16, 0, 300 * time.Second) // 服务器启动初始化连接池
 	initUserDBO()
+	initUserMsgDBO()
 }
 func main() {
 	fmt.Println("start listen on the port 8888")

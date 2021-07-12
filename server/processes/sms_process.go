@@ -2,6 +2,7 @@ package processes
 
 import (
 	"chatPro/common/message"
+	"chatPro/server/model"
 	"chatPro/server/utils"
 	"encoding/json"
 	"fmt"
@@ -64,8 +65,20 @@ func (this *SmsServerProcess) SendMsgToSomeOne(msg *message.Message) {
 	if ok {
 		this.SendMsgToEachOnlineUser(data, val.Conn)
 	} else {
-		fmt.Println("用户不在线，存储到服务器")
-		// todo
+		conn := model.MyUserDBO.Pool.Get()
+		defer conn.Close()
+		_, err = model.MyUserDBO.GetByFiledUserId(conn, smsSingleMsg.To)
+		if err != nil {
+			fmt.Println("the userid is falut, can't send message to him")
+		} else {
+			// store the message
+			fmt.Println("the userid is not online, when he online will receive this")
+			err = model.ThisUserMsgDao.StoreUnreadMsg(smsSingleMsg)
+			if err != nil {
+				fmt.Println("message send success")
+			}
+		}
+
 
 	}
 }

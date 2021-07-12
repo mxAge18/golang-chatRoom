@@ -1,6 +1,10 @@
 package model
 
+import "time"
+
 type UserSmsMsg struct {
-	User User
+	From User
+	To	string `json:"toUser"`
 	Body string `json:"body"`
+	PostTime time.Time `json:"postTime"`
 }

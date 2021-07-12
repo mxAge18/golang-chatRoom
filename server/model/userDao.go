@@ -9,7 +9,7 @@ import (
 )
 
 type UserDBO struct {
-	pool *redis.Pool
+	Pool *redis.Pool
 }
 
 var (
@@ -18,7 +18,7 @@ var (
 
 func NewUserDBO(pool *redis.Pool) (userDBO *UserDBO) {
 	userDBO = &UserDBO{
-		pool: pool,
+		Pool: pool,
 	}
 	return
 }
@@ -32,7 +32,7 @@ func (this *UserDBO) update() {
 func (this *UserDBO) delete() {
 
 }
-func (this *UserDBO) getByFiledUserId(conn redis.Conn, userId string) (user *User, err error) {
+func (this *UserDBO) GetByFiledUserId(conn redis.Conn, userId string) (user *User, err error) {
 	result, err := redis.String(conn.Do("HGet", "users", userId))
 	fmt.Println(result)
 	if err != nil {
@@ -52,9 +52,9 @@ func (this *UserDBO) getByFiledUserId(conn redis.Conn, userId string) (user *Use
 }
 
 func (this *UserDBO) Login(userId string, userPwd string) (user *User, err error) {
-	conn := this.pool.Get()
+	conn := this.Pool.Get()
 	defer conn.Close()
-	user, err = this.getByFiledUserId(conn, userId)
+	user, err = this.GetByFiledUserId(conn, userId)
 	if err != nil {
 		return
 	}
@@ -66,9 +66,9 @@ func (this *UserDBO) Login(userId string, userPwd string) (user *User, err error
 }
 
 func (this *UserDBO) Register(user *message.User) (err error) {
-	conn := this.pool.Get()
+	conn := this.Pool.Get()
 	defer conn.Close()
-	_, err = this.getByFiledUserId(conn, user.UserId)
+	_, err = this.GetByFiledUserId(conn, user.UserId)
 	if err == nil {
 		err = ERROR_USER_EXIST
 		return
