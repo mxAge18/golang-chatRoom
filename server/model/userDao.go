@@ -34,7 +34,6 @@ func (this *UserDBO) delete() {
 }
 func (this *UserDBO) GetByFiledUserId(conn redis.Conn, userId string) (user *User, err error) {
 	result, err := redis.String(conn.Do("HGet", "users", userId))
-	fmt.Println(result)
 	if err != nil {
 		if redis.ErrNil == err {
 			err = ERROR_USER_NOT_EXIST

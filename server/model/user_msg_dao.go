@@ -70,6 +70,17 @@ func (this *UserSmsMsgDao) StoreUnreadMsg(msg message.SmsMsgSingle) (err error) 
 }
 
 
-func (this *UserSmsMsgDao) GetUnreadMsg() {
-
+func (this *UserSmsMsgDao) GetUnreadMsgInfo(userId string) (data message.UnreadMsgInfoReturn) {
+	fmt.Println("获取未读消息信息中")
+	conn := this.Pool.Get()
+	defer conn.Close()
+	res, err := redis.IntMap(conn.Do("HGetAll", userId))
+	if err != nil {
+		fmt.Println(err)
+	} else {
+		fmt.Println(res)
+		data.UnreadMsgInfo = res
+	}
+	
+	return
 }

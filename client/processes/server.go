@@ -14,8 +14,8 @@ type Server struct{
 func(this *Server) ShowMenu() {
 	fmt.Println("------------welcome to chat room------------")
 	fmt.Println("------------1 user online list--------------")
-	fmt.Println("------------2 send message------------------")
-	fmt.Println("------------3 message list------------------")
+	fmt.Println("------------2 send msg to all online users--")
+	fmt.Println("------------3 unread message----------------")
 	fmt.Println("------------4 send message to someone-------")
 	fmt.Println("------------5 exit the system---------------")
 	fmt.Println("------------please choose(1-5)--------------")
@@ -32,6 +32,8 @@ func(this *Server) ShowMenu() {
 		sp.SendGroup(msg)
 	case 3:
 		fmt.Println("message list")
+		sp:= SmsProcess{}
+		sp.GetUnreadMsg()
 	case 4:
 		ClientUserMangerObj.OutputOnlineUsers()
 		fmt.Println("please type the userId of the person you want to send message")

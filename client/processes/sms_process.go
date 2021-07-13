@@ -85,3 +85,29 @@ func (this *SmsProcess) ReadSingleMsg(msg message.Message) (err error) {
 	fmt.Println("发信内容：", singleMsg.Body)
 	return
 }
+func (this *SmsProcess) GetUnreadMsg() (err error) {
+	var msg message.Message
+	msg.Type = message.GetUnreadMsgInfoType
+	var getInfo message.GetUnreadMsgInfo
+	getInfo.UserId = CurrentUserObj.UserId
+	data, err := json.Marshal(getInfo)
+	if err != nil {
+		fmt.Println("smsMsg json.Marshal err", err)
+		return
+	}
+	msg.Data = string(data)
+	data, err = json.Marshal(msg)
+	if err != nil {
+		fmt.Println("msg json.Marshal err", err)
+		return
+	}
+	tr := &utils.Transfer{
+		Conn: CurrentUserObj.Conn,
+	}
+	err = tr.WritePkg(data)
+	if err != nil {
+		fmt.Println("sms WritePkg json.Marshal err", err)
+		return
+	}
+	return
+}

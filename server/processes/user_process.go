@@ -80,11 +80,11 @@ func (this *UserProcessor) ServerProcessLogin(msg *message.Message) (err error) 
 			loginResMsg.Error = err.Error()
 		} else {
 			loginResMsg.Code = 505
-			loginResMsg.Error = "服务器内部错误"
+			loginResMsg.Error = "server side error 505"
 		}
 	} else {
 		loginResMsg.Code = 200
-		fmt.Println("登录成功", user)
+		fmt.Println("login success", user)
 		// add the user_processor to online_user map
 		this.UserId = loginMsg.UserId
 		fmt.Println("serverUserManger",ServerUserManger)
