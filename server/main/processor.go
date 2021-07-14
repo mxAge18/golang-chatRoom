@@ -32,8 +32,11 @@ func (this *Processor) serverProcessMsg(msg *message.Message) (err error) {
 			smsPro.SendMsgToSomeOne(msg)
 		case message.GetUnreadMsgInfoType:
 			smsPro := &processes.SmsServerProcess{}
-			fmt.Println("开始获取未读消息")
 			smsPro.SendUnreadMsgInfoToSomeOne(msg)
+		case message.GetUnreadMsgType:
+			smsPro := &processes.SmsServerProcess{}
+			fmt.Println("开始获取未读消息")
+			smsPro.SendUnreadMsgDetailToSomeOne(msg)
 		default:
 			fmt.Println("message type is not right", msg.Type)
 

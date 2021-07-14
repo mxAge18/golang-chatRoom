@@ -95,12 +95,13 @@ func (this *UserProcess) Login(userId string, userPwd string) (err error) {
 		// start a new process connect with the server
 		sP := &Server{
 			Conn: conn,
+			ShowMainMenu: true,
 		}
 		go sP.ProcessServerMsg()
 		// start show menu
-		for {
-			sP.ShowMenu()
-		}
+		
+		sP.ShowMenu()
+		
 	} else {
 		fmt.Println(loginResMsg.Error)
 	}

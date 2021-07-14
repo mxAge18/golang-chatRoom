@@ -9,9 +9,10 @@ import (
 	"github.com/garyburd/redigo/redis"
 )
 
-type UserSmsMsgDao struct{
+type UserSmsMsgDao struct {
 	Pool *redis.Pool
 }
+
 var (
 	ThisUserMsgDao *UserSmsMsgDao
 )
@@ -22,7 +23,7 @@ func NewThisUserMsgDao(pool *redis.Pool) (ThisUserMsgDao *UserSmsMsgDao) {
 	}
 	return
 }
-func (this *UserSmsMsgDao) buildMsg(msg message.SmsMsgSingle) (userMsg UserSmsMsg){
+func (this *UserSmsMsgDao) buildMsg(msg message.SmsMsgSingle) (userMsg UserSmsMsg) {
 	userMsg.Body = msg.Body
 	userMsg.From.UserId = msg.From.UserId
 	userMsg.From.UserName = msg.From.UserName
@@ -31,12 +32,12 @@ func (this *UserSmsMsgDao) buildMsg(msg message.SmsMsgSingle) (userMsg UserSmsMs
 	return
 }
 
-func (this *UserSmsMsgDao) setUnreadMsgCounter(conn redis.Conn, ToUserId string, unReadKey string) (err error){
+func (this *UserSmsMsgDao) setUnreadMsgCounter(conn redis.Conn, ToUserId string, unReadKey string) (err error) {
 	_, err = conn.Do("HEXISTS", ToUserId, unReadKey)
 	fmt.Println("res,", err)
 	if err != nil {
 		num, _ := redis.Int(conn.Do("HGet", ToUserId, unReadKey))
-		conn.Do("HSet", ToUserId, unReadKey, num + 1)
+		conn.Do("HSet", ToUserId, unReadKey, num+1)
 	} else {
 		conn.Do("HSet", ToUserId, unReadKey, 1)
 	}
@@ -46,7 +47,6 @@ func (this *UserSmsMsgDao) setUnreadMsgCounter(conn redis.Conn, ToUserId string,
 func (this *UserSmsMsgDao) generateKey(fromId string, toId string) (unReadKey string) {
 	return toId + "_" + fromId
 }
-
 
 func (this *UserSmsMsgDao) StoreUnreadMsg(msg message.SmsMsgSingle) (err error) {
 	fmt.Println("store unread to redis")
@@ -69,9 +69,7 @@ func (this *UserSmsMsgDao) StoreUnreadMsg(msg message.SmsMsgSingle) (err error) 
 	return err
 }
 
-
 func (this *UserSmsMsgDao) GetUnreadMsgInfo(userId string) (data message.UnreadMsgInfoReturn) {
-	fmt.Println("获取未读消息信息中")
 	conn := this.Pool.Get()
 	defer conn.Close()
 	res, err := redis.IntMap(conn.Do("HGetAll", userId))
@@ -81,6 +79,26 @@ func (this *UserSmsMsgDao) GetUnreadMsgInfo(userId string) (data message.UnreadM
 		fmt.Println(res)
 		data.UnreadMsgInfo = res
 	}
-	
+
+	return
+}
+
+func (this *UserSmsMsgDao) GetUnreadMsgDetail(userId string, fromUserId string) (data message.UnreadMsgReturn) {
+	conn := this.Pool.Get()
+	defer conn.Close()
+	key := this.generateKey(fromUserId, userId)
+	fmt.Println(key)
+	res, _ := redis.Values(conn.Do("LRange", key, 0, -1))
+	var userMsg UserSmsMsg
+	var returnMsg message.UnreadMsg
+	for _, v := range res {
+		json.Unmarshal(v.([]byte), &userMsg)
+		returnMsg.Content = userMsg.Body
+		returnMsg.FromUserId = userMsg.From.UserId
+		returnMsg.UserId = userMsg.To
+		data.Data = append(data.Data,returnMsg)
+	}
+	conn.Do("Del", key)
+	conn.Do("HDEl", userId, key)
 	return
 }

@@ -121,7 +121,7 @@ func (this *SmsServerProcess) SendUnreadMsgInfoToSomeOne(msg *message.Message) {
 
 	var getUnreadMsgInfo message.GetUnreadMsgInfo
 	json.Unmarshal([]byte(msg.Data), &getUnreadMsgInfo)
-	conn := model.ThisUserMsgDao.Pool.Get()
+	conn := model.MyUserDBO.Pool.Get()
 	defer conn.Close()
 	_, err := model.MyUserDBO.GetByFiledUserId(conn, getUnreadMsgInfo.UserId)
 	if err != nil {
@@ -130,23 +130,55 @@ func (this *SmsServerProcess) SendUnreadMsgInfoToSomeOne(msg *message.Message) {
 		// get the message info and send to the user
 		fmt.Println("未读消息如下")
 		data := model.ThisUserMsgDao.GetUnreadMsgInfo(getUnreadMsgInfo.UserId)
-		// data, err = json.Marshal(data.UnreadMsgInfo)
+		res, err := json.Marshal(data)
 		if err != nil {
 			fmt.Println("message send success")
 		}
 
 		var returnMsg message.Message
 		returnMsg.Type = message.GetUnreadMsgInfoReturnType
-		fmt.Println(data)
-		// returnMsg.Data = string(data)
-		// data, err = json.Marshal(returnMsg)
-		// if err != nil {
-		// 	fmt.Println("msg json.Marshal err", err)
-		// }
-		// val, ok := ServerUserManger.onlineUsers[getUnreadMsgInfo.UserId]
-		// if ok {
-		// 	this.SendMsgToEachOnlineUser(data, val.Conn)
-		// } else {
-		// }
+		returnMsg.Data = string(res)
+		result, err := json.Marshal(returnMsg)
+		if err != nil {
+			fmt.Println("msg json.Marshal err", err)
+		}
+		val, ok := ServerUserManger.onlineUsers[getUnreadMsgInfo.UserId]
+		if ok {
+			this.SendMsgToEachOnlineUser(result, val.Conn)
+		}
+	}
+}
+
+func (this *SmsServerProcess) SendUnreadMsgDetailToSomeOne(msg *message.Message) {
+
+	var getInfo message.GetUnreadMsg
+	json.Unmarshal([]byte(msg.Data), &getInfo)
+	conn := model.MyUserDBO.Pool.Get()
+	defer conn.Close()
+	_, err := model.MyUserDBO.GetByFiledUserId(conn, getInfo.FromUserId)
+	if err != nil {
+		fmt.Println("the userid is falut")
+	} else {
+		// get the message info and send to the user
+		fmt.Println("未读消息如下")
+		fmt.Println("getInfo.UserId",getInfo.FromUserId)
+		fmt.Println("getInfo.FromUserId",getInfo.FromUserId)
+		data := model.ThisUserMsgDao.GetUnreadMsgDetail(getInfo.UserId, getInfo.FromUserId)
+		res, err := json.Marshal(data)
+		if err != nil {
+			fmt.Println("消息获取错误")
+		}
+
+		var returnMsg message.Message
+		returnMsg.Type = message.UnreadMsgReturnType
+		returnMsg.Data = string(res)
+		result, err := json.Marshal(returnMsg)
+		if err != nil {
+			fmt.Println("msg json.Marshal err", err)
+		}
+		val, ok := ServerUserManger.onlineUsers[getInfo.UserId]
+		if ok {
+			this.SendMsgToEachOnlineUser(result, val.Conn)
+		}
 	}
 }

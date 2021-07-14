@@ -1,5 +1,6 @@
 package message
 
+
 const (
 	LoginMsgType            = "LoginMsg"
 	LoginMesType            = "LoginMes"
@@ -13,6 +14,7 @@ const (
 	GetUnreadMsgInfoType  	= "GetUnreadMsgInfo"
 	GetUnreadMsgInfoReturnType  	= "UnreadMsgInfoReturn"
 	GetUnreadMsgType  		= "GetUnreadMsg"
+	UnreadMsgReturnType  		= "UnreadMsgReturn"
 )
 
 const (
@@ -101,5 +103,5 @@ type UnreadMsg struct{
 type UnreadMsgReturn struct {
 	Code  int    `json:"code"` 
 	Error string `json:"error"`
-	UnreadMsg
+	Data []UnreadMsg `json:"data"`
 }
