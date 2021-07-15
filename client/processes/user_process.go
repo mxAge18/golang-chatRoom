@@ -4,8 +4,8 @@ import (
 	"encoding/binary"
 	"encoding/json"
 	"fmt"
-	"go_code/chatPro/client/utils"
-	"go_code/chatPro/common/message"
+	"chatPro/client/utils"
+	"chatPro/common/message"
 	"net"
 	"os"
 )
@@ -95,12 +95,13 @@ func (this *UserProcess) Login(userId string, userPwd string) (err error) {
 		// start a new process connect with the server
 		sP := &Server{
 			Conn: conn,
+			ShowMainMenu: true,
 		}
 		go sP.ProcessServerMsg()
 		// start show menu
-		for {
-			sP.ShowMenu()
-		}
+		
+		sP.ShowMenu()
+		
 	} else {
 		fmt.Println(loginResMsg.Error)
 	}
@@ -160,3 +161,4 @@ func (this *UserProcess) Register(userId, userName, UserPwd string) (err error) 
 	os.Exit(0)
 	return
 }
+

@@ -1,5 +1,6 @@
 package message
 
+
 const (
 	LoginMsgType            = "LoginMsg"
 	LoginMesType            = "LoginMes"
@@ -8,6 +9,12 @@ const (
 	NotifyUserStatusMsgType = "NotifyUserStatusMsg"
 	SmsMsgType              = "SmsMsg"
 	GroupReturnMsgType      = "GroupReturnMsg"
+	SmsMsgSingleType      	= "SmsMsgSingle"
+	SmsMsgSingleReturnType  = "SmsMsgSingleReturnMsg"
+	GetUnreadMsgInfoType  	= "GetUnreadMsgInfo"
+	GetUnreadMsgInfoReturnType  	= "UnreadMsgInfoReturn"
+	GetUnreadMsgType  		= "GetUnreadMsg"
+	UnreadMsgReturnType  		= "UnreadMsgReturn"
 )
 
 const (
@@ -60,4 +67,41 @@ type GroupReturnMsg struct {
 	Code  int    `json:"code"` // 400标识已占用  200 标识ok // 403标识User未校验通过
 	Error string `json:"error"`
 	Data string `json:"data"`
+}
+
+type SmsMsgSingle struct{
+	From User
+	To string
+	Body string `json:"body"`
+}
+
+type SmsMsgSingleReturn struct {
+	Code  int    `json:"code"` 
+	Error string `json:"error"`
+	Data string `json:"data"`
+}
+
+type GetUnreadMsgInfo struct{
+	UserId string `json:"userId"`
+}
+type UnreadMsgInfoReturn struct {
+	Code  int    `json:"code"` 
+	Error string `json:"error"`
+	UnreadMsgInfo map[string]int `json:"unreadMsgInfo"`
+}
+
+type GetUnreadMsg struct{
+	UserId string `json:"userId"`
+	FromUserId string `json:"fromUserId"`
+}
+type UnreadMsg struct{
+	UserId string `json:"userId"`
+	FromUserId string `json:"fromUserId"`
+	Content string `json:"content"`
+}
+
+type UnreadMsgReturn struct {
+	Code  int    `json:"code"` 
+	Error string `json:"error"`
+	Data []UnreadMsg `json:"data"`
 }

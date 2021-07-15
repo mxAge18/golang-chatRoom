@@ -2,9 +2,9 @@ package main
 
 import (
 	"fmt"
-	"go_code/chatPro/common/message"
-	"go_code/chatPro/server/processes"
-	"go_code/chatPro/server/utils"
+	"chatPro/common/message"
+	"chatPro/server/processes"
+	"chatPro/server/utils"
 	"io"
 	"net"
 )
@@ -27,6 +27,16 @@ func (this *Processor) serverProcessMsg(msg *message.Message) (err error) {
 		case message.SmsMsgType:
 			smsPro := &processes.SmsServerProcess{}
 			smsPro.SendGroupMsg(msg)
+		case message.SmsMsgSingleType:
+			smsPro := &processes.SmsServerProcess{}
+			smsPro.SendMsgToSomeOne(msg)
+		case message.GetUnreadMsgInfoType:
+			smsPro := &processes.SmsServerProcess{}
+			smsPro.SendUnreadMsgInfoToSomeOne(msg)
+		case message.GetUnreadMsgType:
+			smsPro := &processes.SmsServerProcess{}
+			fmt.Println("开始获取未读消息")
+			smsPro.SendUnreadMsgDetailToSomeOne(msg)
 		default:
 			fmt.Println("message type is not right", msg.Type)
 
